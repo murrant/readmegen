@@ -11,7 +11,7 @@ class Git extends AbstractType
      */
     public function parse()
     {
-        return array_filter(array_map('trim', explode(self::MSG_SEPARATOR, $this->getLog())));
+        return array_filter(array_map('trim', explode(self::MSG_SEPARATOR, $this->getLog(), 2)));
     }
 
     /**

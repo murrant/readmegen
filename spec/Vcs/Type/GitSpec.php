@@ -40,24 +40,24 @@ class GitSpec extends ObjectBehavior
     function it_should_add_options_and_arguments_to_the_command(Shell $shell)
     {
         $log = sprintf("Foo bar.%s\nDummy message.%s\n\n", Git::MSG_SEPARATOR, Git::MSG_SEPARATOR);
-        $shell->run(sprintf('git log --pretty=format:"%%s%s%%b"', Git::MSG_SEPARATOR))->willReturn($log);
+        $shell->run('git log --pretty=format:"%s"')->willReturn($log);
         
         $this->setShellRunner($shell);
         
         $this->setOptions(array('x', 'y'));
         $this->setArguments(array('foo' => 'bar', 'baz' => 'wat', 'from' => '1.0'));
         
-        $this->getCommand()->shouldReturn('git log --pretty=format:"%s'.Git::MSG_SEPARATOR.'%b" 1.0..HEAD --x --y');
+        $this->getCommand()->shouldReturn('git log --pretty=format:"%s" 1.0..HEAD --x --y');
     }
 
     function it_should_properly_include_the_from_and_to_arguments() {
         $this->setOptions(array('x', 'y'));
 
         $this->setArguments(array('from' => '3.4.5', 'foo' => 'bar'));
-        $this->getCommand()->shouldReturn('git log --pretty=format:"%s'.Git::MSG_SEPARATOR.'%b" 3.4.5..HEAD --x --y');
+        $this->getCommand()->shouldReturn('git log --pretty=format:"%s" 3.4.5..HEAD --x --y');
 
         $this->setArguments(array('from' => '3.4.5', 'foo' => 'bar', 'to' => '4.0'));
-        $this->getCommand()->shouldReturn('git log --pretty=format:"%s'.Git::MSG_SEPARATOR.'%b" 3.4.5..4.0 --x --y');
+        $this->getCommand()->shouldReturn('git log --pretty=format:"%s" 3.4.5..4.0 --x --y');
     }
 
     function it_returns_the_date_of_the_commit(Shell $shell) {
