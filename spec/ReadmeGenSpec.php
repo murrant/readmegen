@@ -5,7 +5,6 @@ namespace spec\ReadmeGen {
     use PhpSpec\ObjectBehavior;
     use \ReadmeGen\Config\Loader as ConfigLoader;
     use \ReadmeGen\Shell;
-    use \ReadmeGen\Vcs\Type\Git;
     use \ReadmeGen\Log\Extractor;
     use \ReadmeGen\Log\Decorator;
     use \ReadmeGen\Output\Format\Md;
@@ -72,6 +71,7 @@ namespace spec\ReadmeGen {
 
         function it_runs_the_whole_process(Shell $shell)
         {
+            $shell->beADoubleOf('ReadmeGen\Shell');
             file_put_contents($this->gitConfigFile, $this->gitConfig);
 
             $shell->run('git log --pretty=format:"%s" 1.2.3..4.0.0')->willReturn($this->getLogAsString());
@@ -85,10 +85,10 @@ namespace spec\ReadmeGen {
             ));
             $this->getParser()->setShellRunner($shell);
 
-            $log = $this->getParser()->parse();
+            $this->getParser()->parse();
 
             $this->setExtractor(new Extractor());
-            $logGrouped = $this->extractMessages($log)->shouldReturn(array(
+            $logGrouped = $this->extractMessages($this->getLogAsArray())->shouldReturn(array(
                 'Features' => array(
                     'bar baz #123',
                     'dummy feature',
@@ -122,9 +122,9 @@ namespace spec\ReadmeGen {
             $this->writeOutput()->shouldReturn(true);
         }
 
-        protected function getLogAsString()
+        protected function getLogAsArray()
         {
-            $log = array(
+            return array(
                 'foo',
                 'feature: bar baz #123',
                 'nope',
@@ -133,8 +133,11 @@ namespace spec\ReadmeGen {
                 'also nope',
                 'fix: some bugfix',
             );
+        }
 
-            return join(Git::MSG_SEPARATOR."\n", $log).Git::MSG_SEPARATOR."\n";
+        protected function getLogAsString()
+        {
+            return join("\n", $this->getLogAsArray())."\n";
         }
 
     }

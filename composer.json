@@ -17,6 +17,7 @@
         "phpspec/phpspec": "^2.5"
     },
     "config": {
+        "platform": {"php": "5.3.9"},
         "bin-dir": "bin"
     },
     "bin": [
