@@ -24,9 +24,9 @@ class Extractor {
     /**
      * Message groups as a string.
      *
-     * @var string
+     * @var array
      */
-    protected $messageGroupsJoined;
+    protected $messageGroupsJoined = array();
 
     /**
      * Grouped messages.
@@ -78,6 +78,7 @@ class Extractor {
 
                 if (preg_match($pattern, $line)) {
                     $this->appendToGroup($header, $line, $pattern);
+                    break;
                 }
             }
         }
